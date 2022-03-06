@@ -30,7 +30,7 @@ string readFileIntoString(const string& path) {
 int main() {
     setlocale(LC_ALL, "Russian");
 
-    string filename("C:\\Users\\Ученик\\Desktop\\input.txt");
+    string filename("Путь к файлу");
     string s;
 
     s = readFileIntoString(filename);
