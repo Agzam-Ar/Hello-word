@@ -1,0 +1,73 @@
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <iterator>
+
+
+using std::cout; 
+using std::cerr;
+using std::endl; 
+using std::string;
+using std::ifstream; 
+using std::ostringstream;
+
+using namespace std;
+
+string readFileIntoString(const string& path) {
+    ifstream input_file(path);
+    if (!input_file.is_open()) {
+        cerr << "Could not open the file - '"
+            << path << "'" << endl;
+        exit(EXIT_FAILURE);
+    }
+    return string((std::istreambuf_iterator<char>(input_file)), std::istreambuf_iterator<char>());
+}
+
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+
+    string filename("C:\\Users\\Ученик\\Desktop\\input.txt");
+    string s;
+
+    s = readFileIntoString(filename);
+    replace(s.begin(), s.end(), '\r', ' ');
+    replace(s.begin(), s.end(), '\n', '.');
+   // replace(s.begin(), s.end(), "...", ".  ");
+
+    int count = 0;
+    int maxCount = 0;
+    int maxStartIndex = 0;
+    int maxEndIndex = 0;
+    for (int i = 0; i < s.length(); i++)
+    {
+        if (s[i] == '.' || s[i] == '!' || s[i] == '?' || s[i] == '…' || s[i] == '\n') {
+            if (count > maxCount) {
+                maxCount = count;
+                maxStartIndex = maxEndIndex;
+                maxEndIndex = i;
+            }
+            count = 0;
+        }else if (s[i] == ',' || s[i] == ';' || s[i] == ':'
+            || s[i] == '—' || s[i] == '–' || (i > 0 && s[i] == '-' && s[i-1] == ' ')) {
+            count++;
+        }
+    }
+
+    for (int i = maxEndIndex-1; i > 0; i--)
+    {
+        maxStartIndex = i;
+        if (s[i] == '.' || s[i] == '!' || s[i] == '?' || s[i] == '\n') break;
+    }
+
+    for (int i = maxStartIndex+1; i < maxEndIndex+1; i++)
+    {
+        if (s[i] == '…') {
+            cout << "...";
+        }else
+        cout << s[i];
+    }
+}
